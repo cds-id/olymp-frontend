@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /demo-csr
+
+Sitemap: https://example.com/sitemap.xml
