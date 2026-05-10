@@ -1,7 +1,7 @@
 import type { Config } from "vike/types";
 
 export default {
-  title: "Solid DDD Boilerplate — SolidJS + Vike + Tailwind + TanStack Query",
+  title: "Dummy LMS — Platform Pembelajaran Sekolah Digital",
   description:
-    "Production-ready SolidJS boilerplate with Domain Driven Design, Vike SSR, Tailwind CSS, and TanStack Query.",
+    "Satu platform untuk seleksi, pelatihan, dan kompetisi siswa — dari ruang kelas hingga panggung internasional. Dirancang khusus mengikuti kurikulum Dummy.",
 } satisfies Config;

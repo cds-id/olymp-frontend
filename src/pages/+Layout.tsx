@@ -1,8 +1,8 @@
 import "../presentation/styles/global.css";
 
 import type { JSX } from "solid-js";
-import { AppLayout } from "../presentation/layouts/AppLayout";
+import { PublicLayout } from "../presentation/layouts/PublicLayout";
 
 export default function Layout(props: { children?: JSX.Element }) {
-  return <AppLayout>{props.children}</AppLayout>;
+  return <PublicLayout>{props.children}</PublicLayout>;
 }
