@@ -106,8 +106,17 @@ jobs:
           path: dist/
       - name: Install LHCI
         run: npm install -g @lhci/cli@0.15.x
-      - name: Run Lighthouse CI
+      - name: Run Lighthouse CI for landing page
         run: lhci autorun
+      - name: Update README Lighthouse result
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: bun run lighthouse:update-readme
+      - name: Commit README Lighthouse result
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "docs: update landing Lighthouse result [skip ci]"
+          file_pattern: README.md
       - name: Upload Lighthouse reports
         if: always()
         uses: actions/upload-artifact@v4

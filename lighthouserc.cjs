@@ -6,12 +6,8 @@ module.exports = {
       startServerCommand: "npx vike preview",
       startServerReadyPattern: "Local",
       startServerReadyTimeout: 30000,
-      url: [
-        "http://localhost:3000/",
-        "http://localhost:3000/todo",
-        "http://localhost:3000/demo-ssr",
-        "http://localhost:3000/demo-mixed",
-      ],
+      // Landing page only. Keep CI focused on public homepage quality.
+      url: ["http://localhost:3000/"],
       numberOfRuns: 3,
       settings: {
         chromeFlags: "--no-sandbox --headless --disable-gpu",

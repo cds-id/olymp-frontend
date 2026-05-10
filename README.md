@@ -226,6 +226,26 @@ function MyComponent() {
 
 ---
 
+<!-- LIGHTHOUSE_REPORT_START -->
+## Lighthouse — Landing Page
+
+Latest automated Lighthouse CI result for `/`.
+
+| Category | Score |
+| --- | ---: |
+| ⚪ Performance | pending |
+| ⚪ Accessibility | pending |
+| ⚪ Best Practices | pending |
+| ⚪ SEO | pending |
+
+- URL: `/`
+- Updated: `pending first main push`
+- Commit: `pending`
+- Workflow: pending
+<!-- LIGHTHOUSE_REPORT_END -->
+
+---
+
 ## CI — GitHub Actions
 
 Pipeline runs on push/PR to `main`:

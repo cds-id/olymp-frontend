@@ -6,7 +6,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "lighthouse:update-readme": "node scripts/update-lighthouse-readme.mjs"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.3.0",
