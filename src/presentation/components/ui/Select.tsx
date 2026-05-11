@@ -18,6 +18,7 @@ export interface SelectProps {
   helperText?: string;
   error?: string;
   class?: string;
+  onChange?: (value: string) => void;
 }
 
 const selectSizeClasses: Record<FieldSize, { shell: string; control: string; search: string }> = {
@@ -45,6 +46,7 @@ export function Select(props: SelectProps) {
         <select
           value={props.value ?? ""}
           disabled={props.disabled}
+          onChange={(event) => props.onChange?.(event.currentTarget.value)}
           class={`w-full appearance-none border-0 bg-transparent text-neutral-800 outline-none disabled:opacity-60 ${classes().control}`}
         >
           {props.placeholder && <option value="">{props.placeholder}</option>}

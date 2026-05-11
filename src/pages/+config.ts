@@ -5,6 +5,7 @@ import vikeSolidQuery from "vike-solid-query/config";
 const config: Config = {
   title: "Solid DDD Boilerplate",
   description: "SolidJS + Vike + Tailwind + TanStack Query with Domain Driven Design",
+  clientRouting: true,
   queryClientConfig: {
     defaultOptions: {
       queries: {

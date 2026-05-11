@@ -27,7 +27,7 @@ export function DataTable<T extends Record<string, unknown>>(props: DataTablePro
           </tr>
         </thead>
         <tbody class="divide-y divide-border">
-          <Show when={props.rows.length > 0} fallback={<tr><td class="px-4 py-8 text-center text-neutral-500" colSpan={props.columns.length}>{props.emptyText ?? "No data"}</td></tr>}>
+          <Show when={props.rows.length > 0} fallback={<tr><td class="px-4 py-8 text-center text-neutral-500" colSpan={props.columns.length}>{props.emptyText ?? "Tidak ada data"}</td></tr>}>
             <For each={props.rows}>
               {(row) => (
                 <tr class="transition-colors hover:bg-neutral-50/80">

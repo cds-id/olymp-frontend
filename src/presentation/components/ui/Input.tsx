@@ -8,6 +8,8 @@ export interface InputProps {
   invalid?: boolean;
   size?: FieldSize;
   class?: string;
+  label?: string;
+  onInput?: (value: string) => void;
 }
 
 const inputSizeClasses: Record<FieldSize, string> = {
@@ -18,16 +20,19 @@ const inputSizeClasses: Record<FieldSize, string> = {
 
 export function Input(props: InputProps) {
   const size = () => props.size ?? "md";
-  return (
+  const input = (
     <input
       type={props.type ?? "text"}
       value={props.value ?? ""}
       placeholder={props.placeholder}
       disabled={props.disabled}
       aria-invalid={props.invalid ? "true" : undefined}
+      onInput={(event) => props.onInput?.(event.currentTarget.value)}
       class={`w-full border bg-surface text-neutral-800 outline-none transition placeholder:text-neutral-400 disabled:cursor-not-allowed disabled:opacity-60 ${inputSizeClasses[size()]} ${
         props.invalid ? "border-red-300 focus:border-red-500 focus:ring-red-50" : "border-border focus:border-green-500 focus:ring-green-50"
       } focus:ring-4 ${props.class ?? ""}`}
     />
   );
+  if (!props.label) return input;
+  return <label class="block"><span class="mb-2 block text-sm font-semibold text-navy-900">{props.label}</span>{input}</label>;
 }
