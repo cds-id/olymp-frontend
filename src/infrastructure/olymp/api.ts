@@ -49,6 +49,7 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<ApiE
 
 export const olympApi = {
   login: (username: string, password: string) => api<AuthResponse>("/api/auth/login", { method: "POST", body: JSON.stringify({ username, password }) }),
+  logout: (token: string) => api<{ message: string }>("/api/auth/logout", { method: "POST", body: JSON.stringify({ token }) }),
   me: () => api<UserProfile>("/api/users/me"),
   roles: () => api<MyRolesResponse>("/api/users/me/roles"),
 

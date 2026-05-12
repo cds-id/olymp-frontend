@@ -1,7 +1,10 @@
 import type { JSX } from "solid-js";
-import { BottomNavbar, SidebarMenu } from "../components/ui";
+import { createResource, For, Show } from "solid-js";
+import { Badge, BottomNavbar, SidebarMenu } from "../components/ui";
 import { AuthGuard } from "../auth/AuthGuard";
 import { useRbac } from "../auth/rbac";
+import { clearSession, getSessionUser, getToken } from "../auth/session";
+import { olympApi, type UserProfile } from "../../infrastructure/olymp/api";
 
 const groups = [
   { label: "Operasi", items: [
@@ -35,7 +38,7 @@ export function AdminLayout(props: { title: string; subtitle?: string; actions?:
   );
 }
 
-export function AdminShell(props: { title: string; subtitle?: string; actions?: JSX.Element; children: JSX.Element }) {
+export function AdminShell(props: { title: string; subtitle?: string; actions?: JSX.Element; children: JSX.Element; initialProfile?: UserProfile }) {
   const path = () => (typeof window === "undefined" ? "/admin" : window.location.pathname);
   const rbac = useRbac();
   const markedGroups = () => groups.map((group) => ({
@@ -55,7 +58,10 @@ export function AdminShell(props: { title: string; subtitle?: string; actions?: 
                 <h1 class="mt-1 font-display text-2xl font-extrabold text-navy-900 sm:text-3xl">{props.title}</h1>
                 {props.subtitle && <p class="mt-1 max-w-2xl text-sm text-neutral-600">{props.subtitle}</p>}
               </div>
-              {props.actions && <div class="flex flex-wrap gap-2">{props.actions}</div>}
+              <div class="flex flex-wrap items-center gap-3">
+                {props.actions && <div class="flex flex-wrap gap-2">{props.actions}</div>}
+                <AdminAccountPanel initialProfile={props.initialProfile} />
+              </div>
             </div>
           </header>
           <div class="mx-auto max-w-[1400px] px-4 py-5 sm:px-6 lg:px-8">{props.children}</div>
@@ -63,5 +69,74 @@ export function AdminShell(props: { title: string; subtitle?: string; actions?: 
       </div>
       <BottomNavbar items={mobileItems.filter((item) => rbac.can(item.permission)).map((item) => ({ ...item, active: path() === item.href }))} />
     </div>
+  );
+}
+
+function AdminAccountPanel(props: { initialProfile?: UserProfile }) {
+  const rbac = useRbac();
+  const [profile] = createResource(
+    () => (props.initialProfile ? false : true),
+    async () => (await olympApi.me().catch(() => ({ data: getSessionUser() as UserProfile | null }))).data,
+  );
+  const currentProfile = () => props.initialProfile ?? profile() ?? getSessionUser();
+  const displayName = () => currentProfile()?.name || currentProfile()?.username || currentProfile()?.email || "Admin";
+  const roleChips = () => rbac.roles()?.roles ?? [];
+
+  async function logout() {
+    const token = getToken();
+    if (token) await olympApi.logout(token).catch(() => undefined);
+    clearSession();
+    if (typeof window !== "undefined") window.location.href = "/login";
+  }
+
+  return (
+    <details class="group relative">
+      <summary
+        aria-label="Akun pengguna"
+        class="flex cursor-pointer list-none items-center gap-2 rounded-2xl border border-border bg-surface px-2.5 py-2 shadow-sm transition hover:-translate-y-px hover:shadow-md [&::-webkit-details-marker]:hidden"
+      >
+        <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-navy-900 font-display text-sm font-extrabold text-white shadow-sm">
+          {displayName().slice(0, 1).toUpperCase()}
+        </div>
+        <div class="hidden min-w-0 text-left sm:block">
+          <div class="max-w-[150px] truncate text-sm font-bold text-navy-900">{displayName()}</div>
+          <div class="text-[11px] font-semibold uppercase tracking-[0.12em] text-green-700">Akun pengguna</div>
+        </div>
+        <span class="hidden text-neutral-400 transition group-open:rotate-180 sm:inline">⌄</span>
+      </summary>
+
+      <div class="absolute right-0 top-[calc(100%+0.5rem)] z-50 w-72 rounded-3xl border border-border bg-surface p-4 shadow-xl">
+        <div class="flex items-center gap-3">
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-navy-900 font-display text-lg font-extrabold text-white">
+            {displayName().slice(0, 1).toUpperCase()}
+          </div>
+          <div class="min-w-0">
+            <div class="truncate font-display text-base font-extrabold text-navy-900">{displayName()}</div>
+            <div class="truncate text-xs text-neutral-500">{currentProfile()?.email}</div>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <div class="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-neutral-400">Role akses</div>
+          <div class="flex flex-wrap gap-1.5">
+            <Show when={rbac.roles()?.is_admin}>
+              <Badge tone="green">Admin</Badge>
+            </Show>
+            <For each={roleChips()}>
+              {(role) => <Badge tone={role === "superadmin" ? "navy" : "neutral"}>{role}</Badge>}
+            </For>
+          </div>
+        </div>
+
+        <div class="mt-4 grid gap-1 border-t border-border pt-3">
+          <a href="/admin/profile" class="rounded-xl px-3 py-2 text-sm font-semibold text-green-700 transition hover:bg-green-50 hover:text-green-900">
+            Profil
+          </a>
+          <button type="button" onClick={logout} class="rounded-xl px-3 py-2 text-left text-sm font-semibold text-neutral-600 transition hover:bg-neutral-50 hover:text-navy-900">
+            Keluar
+          </button>
+        </div>
+      </div>
+    </details>
   );
 }
