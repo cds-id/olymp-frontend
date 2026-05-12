@@ -1,4 +1,5 @@
-import { Btn, Container, Logo } from "./primitives";
+import { Icon } from "../../components/Icon";
+import { Container, Logo } from "./primitives";
 
 export function NavBar() {
   return (
@@ -32,15 +33,14 @@ export function NavBar() {
           </nav>
 
           <div class="flex gap-2.5 items-center">
-            <a href="/components" class="hidden sm:inline-flex">
-              <Btn variant="ghost" showIcon={false} size="sm">
-                Komponen
-              </Btn>
+            <a href="/components" class="hidden h-9 items-center rounded-lg border border-transparent px-3.5 text-[13px] font-semibold text-green-700 transition-all duration-200 hover:text-green-900 sm:inline-flex">
+              Komponen
             </a>
-            <a href="/login">
-              <Btn variant="primary" size="sm">
-                Masuk
-              </Btn>
+            <a href="/login" class="group inline-flex h-9 items-center gap-2.5 whitespace-nowrap rounded-lg border border-transparent bg-navy-900 px-3.5 text-[13px] font-semibold text-white shadow-[0_6px_18px_rgba(32,27,90,0.25)] transition-all duration-200 hover:bg-[#171442] active:translate-y-px">
+              Masuk
+              <span class="inline-block transition-transform duration-200 group-hover:translate-x-0.5">
+                <Icon name="arrow-right" size={16} stroke={2.2} />
+              </span>
             </a>
           </div>
         </div>

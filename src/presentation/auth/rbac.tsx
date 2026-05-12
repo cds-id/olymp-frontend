@@ -4,8 +4,9 @@ import { olympApi, type MyRolesResponse } from "../../infrastructure/olymp/api";
 
 const RbacContext = createContext<{ roles: () => MyRolesResponse | null; can: (permission: string) => boolean; staff: () => boolean }>();
 
-export function RbacProvider(props: { children: JSX.Element }) {
-  const [roles] = createResource(async () => (await olympApi.roles()).data);
+export function RbacProvider(props: { children: JSX.Element; initialRoles?: MyRolesResponse | null }) {
+  const [fetchedRoles] = createResource(async () => (await olympApi.roles()).data);
+  const roles = () => props.initialRoles ?? fetchedRoles() ?? null;
   const can = (permission: string) => {
     const data = roles();
     return !!data?.is_admin || !!data?.is_staff || !!data?.permissions.includes(permission);

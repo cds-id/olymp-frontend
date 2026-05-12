@@ -28,6 +28,14 @@ const mobileItems = [
 ];
 
 export function AdminLayout(props: { title: string; subtitle?: string; actions?: JSX.Element; children: JSX.Element }) {
+  return (
+    <AuthGuard staffOnly>
+      <AdminShell {...props} />
+    </AuthGuard>
+  );
+}
+
+export function AdminShell(props: { title: string; subtitle?: string; actions?: JSX.Element; children: JSX.Element }) {
   const path = () => (typeof window === "undefined" ? "/admin" : window.location.pathname);
   const rbac = useRbac();
   const markedGroups = () => groups.map((group) => ({
@@ -36,7 +44,6 @@ export function AdminLayout(props: { title: string; subtitle?: string; actions?:
   })).filter((group) => group.items.length > 0);
 
   return (
-    <AuthGuard staffOnly>
     <div class="min-h-screen bg-bg text-neutral-900">
       <div class="flex min-h-screen">
         <SidebarMenu brand="Olymp" groups={markedGroups()} footer="Dashboard produksi. Semua pagination dari server." />
@@ -56,6 +63,5 @@ export function AdminLayout(props: { title: string; subtitle?: string; actions?:
       </div>
       <BottomNavbar items={mobileItems.filter((item) => rbac.can(item.permission)).map((item) => ({ ...item, active: path() === item.href }))} />
     </div>
-    </AuthGuard>
   );
 }

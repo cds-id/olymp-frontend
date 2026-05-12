@@ -24,7 +24,7 @@ export function AuthGuard(props: { staffOnly?: boolean; children: JSX.Element })
   return (
     <Show when={!roles.loading} fallback={<div class="min-h-screen bg-bg p-6 text-sm text-neutral-600">Memeriksa sesi...</div>}>
       <Show when={roles()} fallback={<div class="min-h-screen bg-bg p-6 text-sm text-neutral-600">Mengalihkan...</div>}>
-        <RbacProvider>{props.children}</RbacProvider>
+        <RbacProvider initialRoles={roles()}>{props.children}</RbacProvider>
       </Show>
     </Show>
   );
